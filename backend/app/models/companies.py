@@ -1,6 +1,6 @@
 from ..models import db
 from werkzeug.security import generate_password_hash, check_password_hash  #why dis not work?
-from .jobseekers import chats_join
+# from .jobseekers import chats_join
 
 class Company(db.Model):
     __tablename__ = 'companies'
@@ -16,7 +16,7 @@ class Company(db.Model):
 
     openings = db.relationship('Opening', back_populates='company')
     chats = db.relationship('Chat', back_populates='company')
-    jobseekers = db.relationship('Jobseeker', secondary=chats_join, back_populates='companies')
+    # jobseekers = db.relationship('Jobseeker', secondary=chats_join, back_populates='companies')
 
 
     @property

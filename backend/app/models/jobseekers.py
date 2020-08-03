@@ -1,13 +1,5 @@
-from ..models import db
+from ..models import db, chats
 from werkzeug.security import generate_password_hash, check_password_hash
-
-chats_join = db.Table(
-    'chats',
-    db.Base.metadata,
-    db.Column('jobseekers_id', db.Integer, db.ForeignKey('jobseekers.id')),
-    db.Column('companies_id', db.Integer, db.ForeignKey('companies.id'))
-)
-
 
 class Jobseeker(db.Model):
     __tablename__ = 'jobseekers'
@@ -27,7 +19,7 @@ class Jobseeker(db.Model):
     swipes = db.relationship('Swipe', back_populates='jobseeker')
     experiences = db.relationship('Experience', back_populates='jobseeker')
     chats = db.relationship('Chat', back_populates='jobseeker')
-    companies = db.relationship('Company', secondary=chats_join, back_populates='jobseekers')
+    companies = db.relationship('Company', secondary=chats, back_populates='jobseekers')
 
     @property
     def password(self):

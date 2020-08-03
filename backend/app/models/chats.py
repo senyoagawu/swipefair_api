@@ -2,6 +2,12 @@ from ..models import db
 from .jobseekers import Jobseeker
 from .companies import Company
 
+# chats_join = db.Table(
+#     'chats',
+#     db.Model.metadata,
+#     db.Column('jobseekers_id', db.Integer, db.ForeignKey('jobseekers.id')),
+#     db.Column('companies_id', db.Integer, db.ForeignKey('companies.id'))
+# )
 
 class Chat(db.Model):
     __tablename__ = 'chats'
