@@ -18,6 +18,7 @@ alembic = "*"
 flask-migrate = "*"
 pyjwt = "*"
 flask-cors = "*"
+werkzeug = "*"
 
 [requires]
 python_version = "3.8"
