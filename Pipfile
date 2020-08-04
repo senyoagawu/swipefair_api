@@ -19,6 +19,7 @@ flask-migrate = "*"
 pyjwt = "*"
 flask-cors = "*"
 werkzeug = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"
