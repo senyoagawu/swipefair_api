@@ -21,6 +21,9 @@
 - merge changes
 - delete local branch
 
+### Enter into CLI
+- heroku config:set FLASK_APP=swipefair.py
+- heroku config:set FLASK_ENV=development
 ## Heroku Workflow
 - git push heroku master
 
@@ -45,3 +48,4 @@
 
 ### Setup autocomplete for Heroku
 - heroku autocomplete
+
