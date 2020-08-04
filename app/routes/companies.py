@@ -8,8 +8,7 @@ bp = Blueprint("companies", __name__, url_prefix='/api/companies')
 def index():
     companies = Company.query.all()
     data = [company.to_dict() for company in companies]
-    # return {'companies': data}
-    return 'sdfsdfd'
+    return {'companies': data}
 
 @bp.route('/<int:companyId>')  # fetch a single company
 def company_id(companyId):
