@@ -1,5 +1,5 @@
 from __future__ import with_statement
-from app.models import chats, companies, experiences, jobseekers, messages, openings, swipes
+
 import logging
 from logging.config import fileConfig
 
@@ -31,6 +31,7 @@ target_metadata = current_app.extensions['migrate'].db.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
 
 
 def run_migrations_offline():

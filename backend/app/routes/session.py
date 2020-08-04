@@ -6,7 +6,8 @@ from ..models.users import User
 from ..config import Configuration
 from ..auth import require_auth
 
-bp = Blueprint("session", __name__, url_prefix='/api/session')
+bp = Blueprint("session_jobseeker", __name__, url_prefix='/api/jobseekers/session')
+bp = Blueprint("session_companies", __name__, url_prefix='/api/companies/session')
 
 @bp.route('', methods=["POST"])
 def login():
