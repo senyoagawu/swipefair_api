@@ -20,6 +20,6 @@ pyjwt = "*"
 flask-cors = "*"
 werkzeug = "*"
 gunicorn = "*"
-
+validate-email = "*"
 [requires]
 python_version = "3.8"

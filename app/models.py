@@ -1,10 +1,41 @@
 from flask_sqlalchemy import SQLAlchemy
+from validate_email import validate_email
 # from ..models import chats, companies, experiences, jobseekers, messages, openings, swipes
+from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy_validation import Model, Column
 
 db = SQLAlchemy()
 
 
-class Chat(db.Model):
+class MixinAsDict:
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
+#for reference
+# class MixinGetByUsername:
+#     username = Column(String(200), unique=True, nullable=True)
+#     @classmethod
+#     def get_by_username(cls, username):
+#         return session.query(cls).filter(cls.username == username).first()
+
+
+openings_channels = db.Table(
+    'openings_channels',
+    db.Model.metadata,
+    db.Column('channels_id', db.Integer, db.ForeignKey('channels.id')),
+    db.Column('openings_id', db.Integer, db.ForeignKey('openings.id'))
+)
+
+
+class Channel(MixinAsDict, db.Model):
+    __tablename__ = 'channels'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(60), nullable=False)
+    openings = db.relationship('Opening', secondary='openings_channels', back_populates='channels')
+
+
+class Chat(MixinAsDict, db.Model):
     __tablename__ = 'chats'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -16,7 +47,7 @@ class Chat(db.Model):
     jobseeker = db.relationship('Jobseeker', back_populates='chats')
 
 
-class Company(db.Model):
+class Company(MixinAsDict, db.Model):
     __tablename__ = 'companies'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -30,9 +61,25 @@ class Company(db.Model):
 
     openings = db.relationship('Opening', back_populates='company')
     chats = db.relationship('Chat', back_populates='company')
-    
-    # jobseekers = db.relationship('Jobseeker', secondary=chats_join, back_populates='companies')
+# my eyes aint what they used to be
+    def potential_jobseekers(companyId):
+        "starting... now"- gen
+        joins = Opening.query.join(Company).all()
+        flat = [] #bare with me
+        swipes = [flat.extend(swipe) for swipe in [j.swipes for j in joins]] #ok, i notices its not actually flattened
+        memo = [f.jobseeker.as_dict() for f in flat]
+        Jobseeker.query.join()
+        # jobseekers = [s.jobseeker.to_dict() for s in swipes]
+        # is there a flatten in python #sorry are you saying return just joins
+        return {'jobsekers': memo} #sorry are you saying return just joins
+        # .join(Openings).join(Jobseeker).filter(Company.id == companyId).\
+        #     filter(Swipe.swiped_right == true).filter(Swipe.role =='jobseeker').all()
+        return Company.query.join(Swipe).join(Openings).join(Jobseeker).filter(Company.id == companyId).\
+            filter(Swipe.swiped_right == true).filter(Swipe.role =='jobseeker').all()
+        # # (theres  prolly more filtering, but s)
+        # (our regular queries work)
 
+    # jobseekers = db.relationship('Jobseeker', secondary=chats_join, back_populates='companies')
 
     @property
     def password(self):
@@ -42,8 +89,25 @@ class Company(db.Model):
     def password(self, password):
         self.hashed_password = generate_password_hash(password)
 
+    #this was from bryce. and we used it
+    # so is this still frontend validation?
+    # hacker central. 
+    # so are there 3/4 places you could validate
+    #     1. backend models (but how)
+    #     2. backend (frontend) -- 
+    #     3. frontend (?backend?)
+    #     4. frontend (frontend) -- forms
+    # like the front end of the server?
+    # is there a way to  do both?
+
+
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
+    
+    def is_valid_email(self, email):
+        # is_valid = validate_email(self.email, check_mx=True)
+        return not re.match("[^@]+@[^@]+\.[^@]+", email)
+    # i assume its probs the same/similar? ^
 
     def to_dict(self):
         return {
@@ -57,7 +121,7 @@ class Company(db.Model):
         }
 
 
-class Experience(db.Model):
+class Experience(MixinAsDict, db.Model):
     __tablename__ = 'experiences'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -69,8 +133,7 @@ class Experience(db.Model):
 
     jobseeker = db.relationship('Jobseeker', back_populates='experiences')
 
-
-class Jobseeker(db.Model):
+class Jobseeker(MixinAsDict, db.Model):
     __tablename__ = 'jobseekers'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -85,6 +148,7 @@ class Jobseeker(db.Model):
     education_date_start = db.Column(db.DateTime)
     education_date_end = db.Column(db.DateTime)
 
+    # is_valid = validate_email('example@example.com',check_mx=True)
     swipes = db.relationship('Swipe', back_populates='jobseeker')
     experiences = db.relationship('Experience', back_populates='jobseeker')
     chats = db.relationship('Chat', back_populates='jobseeker')
@@ -101,22 +165,22 @@ class Jobseeker(db.Model):
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'bio': self.bio,
-            'image': self.image,
-            'title': self.title,
-            'location': self.location,
-            'education_title': self.education_title,
-            'education_date_start': self.education_date_start,
-            'education_date_end': self.education_date_end,
-        }
+    # def to_dict(self):
+    #     return {
+    #         'id': self.id,
+    #         'name': self.name,
+    #         'email': self.email,
+    #         'bio': self.bio,
+    #         'image': self.image,
+    #         'title': self.title,
+    #         'location': self.location,
+    #         'education_title': self.education_title,
+    #         'education_date_start': self.education_date_start,
+    #         'education_date_end': self.education_date_end,
+    #     }
 
 
-class Message(db.Model):
+class Message(MixinAsDict, db.Model):
     __tablename__ = 'messages'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -128,15 +192,9 @@ class Message(db.Model):
     chat = db.relationship('Chat', back_populates='messages')
 
 
-openings_channels = db.Table(
-    'openings_channels',
-    db.Model.metadata,
-    db.Column('channels_id', db.Integer, db.ForeignKey('channels.id')),
-    db.Column('openings_id', db.Integer, db.ForeignKey('openings.id'))
-)
 
 
-# class OpeningsChannel(db.Model):
+# class OpeningsChannel(MixinAsDict, db.Model):
 #     __tablename__ = 'openings_channels'
 
 #     id = db.Column(db.Integer, primary_key=True)
@@ -144,15 +202,8 @@ openings_channels = db.Table(
 #     openings_id = db.Column(db.Integer, db.ForeignKey('openings.id'), nullable=False)
 
 
-class Channel(db.Model):
-    __tablename__ = 'channels'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60), nullable=False)
-    openings = db.relationship('Opening', secondary=openings_channels, back_populates='channels')
-
-
-class Opening(db.Model):
+class Opening(MixinAsDict, db.Model):
     __tablename__ = 'openings'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -176,7 +227,7 @@ class Opening(db.Model):
         }
 
 
-class Swipe(db.Model):
+class Swipe(MixinAsDict, db.Model):
     __tablename__ = 'swipes'
 
     id = db.Column(db.Integer, primary_key=True)
