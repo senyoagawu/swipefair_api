@@ -19,4 +19,7 @@ def company_id(companyId):
     # return {'company': company.to_dict()}
     return {'opens': swiped}
 
-
+@bp.route('/<int:companyId>/jobseekers')  #fetch  all jobseekers who have swiped right on your openings that you haven't swiped on
+def potential_jobseekers(companyId):
+    return Company.potential_jobseekers(companyId)
+    # return {'opens': [j.to_dict() for j in jobseekers]}

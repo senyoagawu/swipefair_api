@@ -20,6 +20,9 @@ def jobseeker_id(jobseekerId):
     return {'jobseeker': jobseeker.to_dict()}
 
 
+
+
+
 # Lora Rusinouskaya
 
 # # @require_auth
@@ -28,6 +31,20 @@ def jobseeker_id(jobseekerId):
 #   items = [item.to_dict() for item in items]
   
 #   return {"items": items}
+
+
+
+
+# #! GET api/jobseekers (fetch all users)
+# #! GET api/jobseekers/:id (fetch single user)
+# #! GET api/companies/:id/swipes/jobseekers (the jobseekers NOT swiped on)
+# #! POST api/jobseekers (create new jobseeker account)
+# #! PUT api/jobseekers (edit jobseeker info)
+# #! DELETE api/jobseekers/:id (delete jobseeker account)
+
+
+# home
+# GET api/channels/:id/jobseekers/:id/swipes/openings (the openings NOT swiped on in a channel)
 
 
 
