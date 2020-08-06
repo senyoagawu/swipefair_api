@@ -45,11 +45,6 @@ def post_jobseeker_experience(jobseekerId):
 
 @bp.route('/<int:jobseekerId>/experiences/<int:experienceId>', methods=['PUT'])
 def edit_jobseeker_message(jobseekerId, experienceId):
-    currentExperience = Experience.query.filter(
-        experienceId == Experience.id).one()
-    if currentExperience.as_dict()['jobseekers_id'] != jobseekerId:
-        return '404 ERROR'
-
     data = request.json
     currentExperience = Experience.query.filter(
         experienceId == Experience.id).one()
@@ -65,12 +60,6 @@ def edit_jobseeker_message(jobseekerId, experienceId):
 def delete_jobseeker_message(jobseekerId, experienceId):
     currentExperience = Experience.query.filter(
         experienceId == Experience.id).one()
-    if currentExperience.as_dict()['jobseekers_id'] != jobseekerId:
-        return '404 ERROR'
-
-    data = request.json
-    currentExperience = Experience.query.filter(
-        experienceId == Experience.id).one()
     db.session.delete(currentExperience)
     db.session.commit()
-    return {'experiences': [data['title'], data['description']]}
+    return 'DELETED'
