@@ -64,24 +64,12 @@ class Company(MixinAsDict, db.Model):
     chats = db.relationship('Chat', back_populates='company')
 # my eyes aint what they used to be
     def potential_jobseekers(companyId):
-        "starting... now"- gen
         joins = Opening.query.join(Company).all()
-        flat = [] #bare with me
-        swipes = [flat.extend(swipe) for swipe in [j.swipes for j in joins]] #ok, i notices its not actually flattened
-        memo = [f.jobseeker.as_dict() for f in flat]
-        Jobseeker.query.join(Swipes)
-
-        # jobseekers = [s.jobseeker.to_dict() for s in swipes]
-        # is there a flatten in python #sorry are you saying return just joins
-        return {'jobsekers': memo} #sorry are you saying return just joins
-        # .join(Openings).join(Jobseeker).filter(Company.id == companyId).\
-        #     filter(Swipe.swiped_right == true).filter(Swipe.role =='jobseeker').all()
-        # return Company.query.join(Swipe).join(Openings).join(Jobseeker).filter(Company.id == companyId).\
-        #     filter(Swipe.swiped_right == true).filter(Swipe.role =='jobseeker').all()
-        # # (theres  prolly more filtering, but s)
-        # (our regular queries work)
-
-    # jobseekers = db.relationship('Jobseeker', secondary=chats_join, back_populates='companies')
+        all_swipes = [] #bare with me
+        [flat.extend(swipe) for swipe in [j.swipes for j in joins]]  #ok, i notices its not actually flattened
+        not_swiped = [s for s in all_swipes if not s.swiped_right]
+        jobseekers = [f.jobseeker.as_dict() for f in not_swiped]
+        return jobseekers  #sorry are you saying return just joins
 
     @property
     def password(self):
@@ -91,38 +79,12 @@ class Company(MixinAsDict, db.Model):
     def password(self, password):
         self.hashed_password = generate_password_hash(password)
 
-    #this was from bryce. and we used it
-    # so is this still frontend validation?
-    # hacker central. 
-    # so are there 3/4 places you could validate
-    #     1. backend models (but how)
-    #     2. backend (frontend) -- 
-    #     3. frontend (?backend?)
-    #     4. frontend (frontend) -- forms
-    # like the front end of the server?
-    # is there a way to  do both?
-
-
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
     
     def is_valid_email(self, email):
         # is_valid = validate_email(self.email, check_mx=True)
         return not re.match("[^@]+@[^@]+\.[^@]+", email)
-    # i assume its probs the same/similar? ^
-# sorry i found out about the as_dict later, in retrospect should've jsut called it to_dict()
-# our psot works for jobseeker, lets check company
-# postman
-    # def to_dict(self):
-    #     return {
-    #         'id': self.id,
-    #         'email': self.email,
-    #         'company_name': self.company_name,
-    #         'bio': self.bio,
-    #         'image': self.image,
-    #         'size': self.size,
-    #         'location': self.location,
-    #     }
 
 
 class Experience(MixinAsDict, db.Model):
@@ -173,20 +135,6 @@ class Jobseeker(MixinAsDict, db.Model):
         # is_valid = validate_email(self.email, check_mx=True)
         return not re.match("[^@]+@[^@]+\.[^@]+", email)
 
-        # we had it in company which is why that route was working (i think)
-    # def to_dict(self):
-    #     return {
-    #         'id': self.id,
-    #         'name': self.name,
-    #         'email': self.email,
-    #         'bio': self.bio,
-    #         'image': self.image,
-    #         'title': self.title,
-    #         'location': self.location,
-    #         'education_title': self.education_title,
-    #         'education_date_start': self.education_date_start,
-    #         'education_date_end': self.education_date_end,
-    #     }
 
 
 class Message(MixinAsDict, db.Model):
@@ -195,7 +143,6 @@ class Message(MixinAsDict, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
-    role = db.Column(db.String(10), nullable=False)
     chats_id = db.Column(db.Integer, db.ForeignKey('chats.id'), nullable=False)
 
     chat = db.relationship('Chat', back_populates='messages')
@@ -226,14 +173,6 @@ class Opening(MixinAsDict, db.Model):
     company = db.relationship('Company', back_populates='openings')
     channels = db.relationship('Channel', secondary=openings_channels, back_populates='openings')
     
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'companies_id': self.companies_id,
-            'title': self.title,
-            'description': self.description,
-            'created_at': self.created_at,
-        }
 
 
 class Swipe(MixinAsDict, db.Model):
@@ -245,18 +184,11 @@ class Swipe(MixinAsDict, db.Model):
     created_at = db.Column(db.DateTime, nullable=False)
     swiped_right = db.Column(db.Boolean, nullable=False)
     super_swipe = db.Column(db.Boolean)
-    role = db.Column(db.String(10), nullable=False)
+    role = db.Column(db.String)
 
     opening = db.relationship('Opening', back_populates='swipes')
     jobseeker = db.relationship('Jobseeker', back_populates='swipes')
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'jobseekers_id': self.jobseekers_id,
-            'openings_id': self.openings_id,
-            'created_at': self.created_at,
-            'swiped_right': self.swiped_right,
-            'super_swipe': self.super_swipe,
-            'role': self.role,
-        }
+    def compare(self):
+        return f'{self.jobseekers_id}{self.openings_id}{self.swiped_right}'
+        

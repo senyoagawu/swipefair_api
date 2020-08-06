@@ -7,19 +7,15 @@ bp = Blueprint("companies", __name__, url_prefix='/api/companies')
 @bp.route('/')  # fetch all companies
 def index():
     companies = Company.query.all()
-    data = [company.to_dict() for company in companies]
+    data = [company.as_dict() for company in companies]
     return {'companies': data}
 
 @bp.route('/<int:companyId>')  # fetch a single company
 def company_id(companyId):
     company = Company.query.filter(Company.id == companyId).one()
-    opensId = [op.id for op in company.openings]
-    swipes = Swipe.query.filter(Swipe.openings_id.in_(opensId)).all()
-    swiped = [s.to_dict() for s in swipes]
-    # return {'company': company.to_dict()}
-    return {'opens': swiped}
+    return {'company': company.as_dict()}
 
-@bp.route('/<int:companyId>/jobseekers')  #fetch  all jobseekers who have swiped right on your openings that you haven't swiped on
+@bp.route('/<int:companyId>/notswipes/jobseekers')  #fetch  all jobseekers who have not swiped right on your openings that you haven't swiped on
 def potential_jobseekers(companyId):
     return Company.potential_jobseekers(companyId)
-    # return {'opens': [j.to_dict() for j in jobseekers]}
+    # return {'opens': [j.as_dict() for j in jobseekers]}
