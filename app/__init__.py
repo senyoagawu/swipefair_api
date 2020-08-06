@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 
 from app.config import Configuration
-from app.routes import jobseekers, companies, companies_session,jobseekers_session
+from app.routes import jobseekers, companies, companies_session,jobseekers_session, matches, openings
 from app.models import db
 
 app = Flask(__name__)
@@ -19,4 +19,6 @@ app.register_blueprint(jobseekers.bp)
 app.register_blueprint(companies.bp)
 app.register_blueprint(companies_session.bp)
 app.register_blueprint(jobseekers_session.bp)
+app.register_blueprint(matches.bp)
+app.register_blueprint(openings.bp)
 
