@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from validate_email import validate_email
+import re #i think its a default library
 # from ..models import chats, companies, experiences, jobseekers, messages, openings, swipes
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy_validation import Model, Column
@@ -68,14 +69,15 @@ class Company(MixinAsDict, db.Model):
         flat = [] #bare with me
         swipes = [flat.extend(swipe) for swipe in [j.swipes for j in joins]] #ok, i notices its not actually flattened
         memo = [f.jobseeker.as_dict() for f in flat]
-        Jobseeker.query.join()
+        Jobseeker.query.join(Swipes)
+
         # jobseekers = [s.jobseeker.to_dict() for s in swipes]
         # is there a flatten in python #sorry are you saying return just joins
         return {'jobsekers': memo} #sorry are you saying return just joins
         # .join(Openings).join(Jobseeker).filter(Company.id == companyId).\
         #     filter(Swipe.swiped_right == true).filter(Swipe.role =='jobseeker').all()
-        return Company.query.join(Swipe).join(Openings).join(Jobseeker).filter(Company.id == companyId).\
-            filter(Swipe.swiped_right == true).filter(Swipe.role =='jobseeker').all()
+        # return Company.query.join(Swipe).join(Openings).join(Jobseeker).filter(Company.id == companyId).\
+        #     filter(Swipe.swiped_right == true).filter(Swipe.role =='jobseeker').all()
         # # (theres  prolly more filtering, but s)
         # (our regular queries work)
 
@@ -108,17 +110,19 @@ class Company(MixinAsDict, db.Model):
         # is_valid = validate_email(self.email, check_mx=True)
         return not re.match("[^@]+@[^@]+\.[^@]+", email)
     # i assume its probs the same/similar? ^
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'email': self.email,
-            'company_name': self.company_name,
-            'bio': self.bio,
-            'image': self.image,
-            'size': self.size,
-            'location': self.location,
-        }
+# sorry i found out about the as_dict later, in retrospect should've jsut called it to_dict()
+# our psot works for jobseeker, lets check company
+# postman
+    # def to_dict(self):
+    #     return {
+    #         'id': self.id,
+    #         'email': self.email,
+    #         'company_name': self.company_name,
+    #         'bio': self.bio,
+    #         'image': self.image,
+    #         'size': self.size,
+    #         'location': self.location,
+    #     }
 
 
 class Experience(MixinAsDict, db.Model):
@@ -165,6 +169,11 @@ class Jobseeker(MixinAsDict, db.Model):
     def check_password(self, password):
         return check_password_hash(self.hashed_password, password)
 
+    def is_valid_email(self, email):
+        # is_valid = validate_email(self.email, check_mx=True)
+        return not re.match("[^@]+@[^@]+\.[^@]+", email)
+
+        # we had it in company which is why that route was working (i think)
     # def to_dict(self):
     #     return {
     #         'id': self.id,
