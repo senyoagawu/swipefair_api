@@ -8,18 +8,16 @@ bp = Blueprint("jobseekers", __name__, url_prefix='/api/jobseekers')
 def index():
     # return '======================'
     jobseekers = Jobseeker.query.all()
-    print(jobseekers[0].to_dict())
-    data = [jobseeker.to_dict() for jobseeker in jobseekers]
+    print(jobseekers[0].as_dict())
+    data = [jobseeker.as_dict() for jobseeker in jobseekers]
     return {'jobseekers': data}
 
 @bp.route('/<int:jobseekerId>')  # fetch a single jobseeker
 def jobseeker_id(jobseekerId):
     jobseeker = Jobseeker.query.filter(Jobseeker.id == jobseekerId).one()
-    # print(jobseekers[0].to_dict())
-    # data = [jobseeker.to_dict() for jobseeker in jobseekers]
-    return {'jobseeker': jobseeker.to_dict()}
-
-
+    # print(jobseekers[0].as_dict())
+    # data = [jobseeker.as_dict() for jobseeker in jobseekers]
+    return {'jobseeker': jobseeker.as_dict()}
 
 
 
