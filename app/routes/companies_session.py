@@ -10,7 +10,7 @@ from ..config import Configuration
 
 bp = Blueprint("session_companies", __name__, url_prefix='/api/session_company')
 
-@bp.route('/', methods=["POST"])  # signin/start new session 
+@bp.route('/', methods=["POST"])  # LOGIN/start new session 
 def login():
     data = request.json
     #   print('===================', data)
@@ -35,7 +35,7 @@ def signup():
     access_token = jwt.encode({'email': company.email}, Configuration.SECRET_KEY)
     return {'access_token': access_token.decode('UTF-8'), 'company': company.as_dict()}
 
-@bp.route('', methods=["DELETE"])
+@bp.route('', methods=["DELETE"])  # LOGOUT delete current session
 def logout():
     access_token = jwt.encode({'email': ''}, Configuration.SECRET_KEY)
     return {'access_token': access_token.decode('UTF-8'), 'company': ''}

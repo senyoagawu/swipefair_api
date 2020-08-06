@@ -6,54 +6,32 @@ bp = Blueprint("jobseekers", __name__, url_prefix='/api/jobseekers')
 
 @bp.route('/')  # fetch all jobseekers
 def index():
-    # return '======================'
     jobseekers = Jobseeker.query.all()
-    print(jobseekers[0].as_dict())
     data = [jobseeker.as_dict() for jobseeker in jobseekers]
     return {'jobseekers': data}
 
 @bp.route('/<int:jobseekerId>')  # fetch a single jobseeker
 def jobseeker_id(jobseekerId):
     jobseeker = Jobseeker.query.filter(Jobseeker.id == jobseekerId).one()
-    # print(jobseekers[0].as_dict())
-    # data = [jobseeker.as_dict() for jobseeker in jobseekers]
     return {'jobseeker': jobseeker.as_dict()}
 
+ 
+@bp.route('/<int:jobseekerId>', methods=['PUT'])  # fetch a single jobseeker
+def edit_jobseeker(jobseekerId):
+    data = request.json
+    try: maybe theres a better way to PUT or do you know
+        jobseeker = Jobseeker.query.filter(Jobseeker.id == jobseekerId).one()
+        jobseeker.name = data['name'],
+        jobseeker.bio = data['bio'],
+        jobseeker.image = data['image'],
+        jobseeker.title = data['title'],
+        jobseeker.location = data['location'],
+        jobseeker.education_title = data['education_title'],
+        jobseeker.education_date_start = data['education_date_start'],
+        jobseeker.education_date_end = data['education_date_end'],
+        db.session.commit()
+        return {'jobseeker': jobseeker.as_dict()}
+    except AssertionError as message:
+        print(str(message))
+        return jsonify({"error": str(message)}), 400
 
-
-# Lora Rusinouskaya
-
-# # @require_auth
-# def company_items_by_type(companyId, type):
-#   items = Item.query.filter(Item.companyId == companyId).filter(Item.type == type.lower()).all()
-#   items = [item.to_dict() for item in items]
-  
-#   return {"items": items}
-
-
-
-
-# #! GET api/jobseekers (fetch all users)
-# #! GET api/jobseekers/:id (fetch single user)
-# #! GET api/companies/:id/swipes/jobseekers (the jobseekers NOT swiped on)
-# #! POST api/jobseekers (create new jobseeker account)
-# #! PUT api/jobseekers (edit jobseeker info)
-# #! DELETE api/jobseekers/:id (delete jobseeker account)
-
-
-# home
-# GET api/channels/:id/jobseekers/:id/swipes/openings (the openings NOT swiped on in a channel)
-
-
-
-
-# #! GET api/jobseekers (fetch all users)
-# #! GET api/jobseekers/:id (fetch single user)
-# #! GET api/companies/:id/swipes/jobseekers (the jobseekers NOT swiped on)
-# #! POST api/jobseekers (create new jobseeker account)
-# #! PUT api/jobseekers (edit jobseeker info)
-# #! DELETE api/jobseekers/:id (delete jobseeker account)
-
-
-# home
-# GET api/channels/:id/jobseekers/:id/swipes/openings (the openings NOT swiped on in a channel)

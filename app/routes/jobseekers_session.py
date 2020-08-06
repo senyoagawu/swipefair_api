@@ -12,19 +12,11 @@ from ..config import Configuration
 bp = Blueprint("session_jobseeker", __name__, url_prefix='/api/session_jobseeker')
 
 
-# @bp.route('/', methods=['OPTIONS'])  # signin/start new session 
-# def banana():  # to save the day from cors redirec
-#     print('hello chiquita')
-#     return Response(status=200) 
-
-# so sorry, we were testing.... what were we teting
 
     
 @bp.route('/', methods=["POST"], strict_slashes=False)  # signin/start new session 
 def login():
     data = request.json
-    # what's the question? currently..
-    print('=====', data)
     jobseeker = Jobseeker.query.filter(Jobseeker.email == data['email']).first() #? email or Jobseekername for login
     if not jobseeker:
         return {"error": "Email not found"}, 422
