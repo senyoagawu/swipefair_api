@@ -143,6 +143,7 @@ class Message(MixinAsDict, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
+    role = db.Column(db.Text, nullable=False)
     chats_id = db.Column(db.Integer, db.ForeignKey('chats.id'), nullable=False)
 
     chat = db.relationship('Chat', back_populates='messages')

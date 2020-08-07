@@ -6,24 +6,24 @@ bp = Blueprint("swipes", __name__, url_prefix='/api')
 
 
 # posts swipe left or right via jobseeker
-@bp.route('/jobseekers/<int:jobseekerId>/openings/<int:openingsId>', methods=['POST'])
-def postsJobseekerSwipes(jobseekerId, openingsId):
+@bp.route('/jobseekers/<int:jobseekerId>/openings/<int:openingId>', methods=['POST'])
+def postsJobseekerSwipes(jobseekerId, openingId):
     data = request.json
-    # print(f"\n\n\nDATA\n{data}\n\n\n")
-    swipe = Swipe(jobseekers_id=jobseekerId, openings_id=openingsId, created_at='now', swiped_right=data['swiped_right'], role='jobseeker')
+
+    swipe = Swipe(jobseekers_id=jobseekerId, openings_id=openingId, created_at='now', swiped_right=data['swiped_right'], role='jobseeker')
     db.session.add(swipe)
     db.session.commit()
-    # print(message.body)
+
     return data
 
 
-# Grabs all of companies chat
-@bp.route('/companies/<int:companyId>/openings/<int:openingsId>', methods=['POST'])
-def postsCompanySwipes(companyId, openingsId):
+# posts swipe left or right via company
+@bp.route('/openings/<int:openingId>/jobseekers/<int:jobseekerId>', methods=['POST'])
+def postsCompanySwipes(jobseekerId, openingId):
     data = request.json
-    # print(f"\n\n\nDATA\n{data}\n\n\n")
-    swipe = Swipe(companies_id=companyId, openings_id=openingsId, created_at='now', swiped_right=data['swiped_right'], role='company')
+
+    swipe = Swipe(jobseekers_id=jobseekerId, openings_id=openingId, created_at='now', swiped_right=data['swiped_right'], role='company')
     db.session.add(swipe)
     db.session.commit()
-    # print(message.body)
+
     return data

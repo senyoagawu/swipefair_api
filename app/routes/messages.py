@@ -38,7 +38,7 @@ def grabCompanyMessages(companyId, chatId):
 def post_jobseeker_message(jobseekerId, chatId):
     data = request.json
     # print(f"\n\n\nDATA\n{data}\n\n\n")
-    message = Message(body=data['body'], created_at='now', role='jobseeker',  chats_id=chatId)
+    message = Message(body=data['body'], created_at='now', role='jobseeker', chats_id=chatId)
     db.session.add(message)
     db.session.commit()
     # print(message.body)
@@ -50,7 +50,7 @@ def post_jobseeker_message(jobseekerId, chatId):
 def post_company_message(companyId, chatId):
     data = request.json
     # print(f"\n\n\nDATA\n{data}\n\n\n")
-    message = Message(body=data['body'], created_at='now', role='company',  chats_id=chatId)
+    message = Message(body=data['body'], created_at='now', role="company", chats_id=chatId)
     db.session.add(message)
     db.session.commit()
     # print(message.body)
