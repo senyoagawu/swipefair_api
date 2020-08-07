@@ -30,8 +30,8 @@ def require_auth_company(func):
             return {'error': 'authentication required'}, 401
         try:
             decoded = jwt.decode(access_token, Configuration.SECRET_KEY)
-            comapny = comapny.query.filter(comapny.email == decoded.get('email')).first()
+            comapny = Company.query.filter(Comapny.email == decoded.get('email')).first()
         except:
             return {'error': 'invalid auth token'}, 401
-        return func(*args, authorized_user=comapny, **kwargs)
+        return func(*args, authorized_user=company, **kwargs)
     return wrapped
