@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.models import db, Company, Swipe
 # from app.models.companies import Jobseeker
-# from ..auth import require_auth
+# from ..auth import require_auth_jobseeker, require_auth_company
 bp = Blueprint("companies", __name__, url_prefix='/api/companies')
 
 @bp.route('/')  # fetch all companies
@@ -17,5 +17,5 @@ def company_id(companyId):
 
 @bp.route('/<int:companyId>/notswipes/jobseekers')  #fetch  all jobseekers who have not swiped right on your openings that you haven't swiped on
 def potential_jobseekers(companyId):
-    return Company.potential_jobseekers(companyId)
-    # return {'opens': [j.as_dict() for j in jobseekers]}
+    jobseekers = Company.potential_jobseekers(companyId)
+    return {'jobseekers': jobseekers}

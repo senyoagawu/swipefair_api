@@ -1,17 +1,23 @@
 from flask import Blueprint, request, jsonify
 from app.models import db, Opening, Company
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, subqueryload
 # from app.models.opening import Opening
 # from ..auth import require_auth
 bp = Blueprint("openings", __name__, url_prefix='/api/openings')
 
 @bp.route('/')  # fetch all opening
 def fetchall_openings():
+    c1 = db.session.query(Opening).options(subqueryload(Opening.companies_id)).one() 
+    print(c1.as_dict())
     companies = Company.query.all()
     openings = Opening.query.all()
     company = [c.as_dict() for c in companies]
+
+# c1 = session.query(Customer).options(joinedload(Customer.invoices)).filter_by(name='Govind Pant').one()
+# c1 = db.session.query(Company).options(joinedload(.invoices)).filter_by(name='Govind Pant').one()
     
-    opening = [o.update(dict('company_name', o.company.name)) for o in openings]
+    # opening = [o.update(dict('company_name', o.company.name)) for o in openings]
+    opening = [o.as_dict() for o in openings]
     payload = {"opening": opening, 'company': company} # how to merge?
     return payload
 
@@ -25,6 +31,7 @@ def fetch_one_opening(openingId):
 @bp.route('/', methods=['POST'])  # fetch a single company
 def post_openings(jobseekerId, chatId):
     data = request.json
+
 
     try: 
         opening = Opening(name=data['title'], type=data['title'], imgSrc=data['created_at'])
@@ -46,4 +53,3 @@ def delete_item(openingId):
 @bp.route('/<int:companyId>/notswipes/jobseekers')  #fetch  all jobseekers who have not swiped right on your openings that you haven't swiped on
 def potential_jobseekers(companyId):
     return Company.potential_jobseekers(companyId)
-    # return {'opens': [j.as_dict() for j in jobseekers]}
