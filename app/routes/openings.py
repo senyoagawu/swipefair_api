@@ -8,13 +8,11 @@ bp = Blueprint("openings", __name__, url_prefix='/api/openings')
 @bp.route('/')  # fetch all opening
 def fetchall_openings():
     c1 = db.session.query(Opening).options(subqueryload(Opening.companies_id)).one() 
-    or 
     print(c1.as_dict())
-    yeah no idea how to implement it
     companies = Company.query.all()
     openings = Opening.query.all()
     company = [c.as_dict() for c in companies]
-  
+
 # c1 = session.query(Customer).options(joinedload(Customer.invoices)).filter_by(name='Govind Pant').one()
 # c1 = db.session.query(Company).options(joinedload(.invoices)).filter_by(name='Govind Pant').one()
     
