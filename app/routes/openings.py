@@ -10,13 +10,29 @@ def fetchall_openings():
     companies = Company.query.all()
     openings = Opening.query.all()
     company = [c.as_dict() for c in companies]
+    data = [opening.as_dict() for opening in openings]
+    opening_info = []
+
+    for info in data:
+        company = Company.query.filter(info['companies_id'] == Company.id).one().as_dict()
+        openingAndCompanyInfo = {}
+        openingAndCompanyInfo['image'] = company['image']
+        openingAndCompanyInfo['company_name'] = company['company_name']
+        openingAndCompanyInfo['email'] = company['email']
+        openingAndCompanyInfo['size'] = company['size']
+        openingAndCompanyInfo['location'] = company['location']
+        openingAndCompanyInfo['bio'] = company['bio']
+        openingAndCompanyInfo['title'] = info['title']
+        openingAndCompanyInfo['description'] = info['description']
+        opening_info.append(openingAndCompanyInfo)
+    # o for o in openings
 
 # c1 = session.query(Customer).options(joinedload(Customer.invoices)).filter_by(name='Govind Pant').one()
 # c1 = db.session.query(Company).options(joinedload(.invoices)).filter_by(name='Govind Pant').one()
     
     # opening = [o.update(dict('company_name', o.company.name)) for o in openings]
-    opening = [o.as_dict() for o in openings]
-    payload = {"opening": opening, 'company': company} # how to merge?
+    # opening = [o.as_dict() for o in openings]
+    payload = {"opening": opening_info} # how to merge?
     return payload
 
 @bp.route('/<int:openingId>')
@@ -48,5 +64,4 @@ def delete_item(openingId):
 
 @bp.route('/<int:companyId>/notswipes/jobseekers')  #fetch  all jobseekers who have not swiped right on your openings that you haven't swiped on
 def potential_jobseekers(companyId):
-    return Company.potential_jobseekers(companyId)
-
+    return {'jobseekers': Company.potential_jobseekers(companyId)}

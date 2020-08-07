@@ -13,7 +13,7 @@ def postsJobseekerSwipes(jobseekerId, openingId):
     swipe = Swipe(jobseekers_id=jobseekerId, openings_id=openingId, created_at='now', swiped_right=data['swiped_right'], role='jobseeker')
     db.session.add(swipe)
     db.session.commit()
-
+    
     return data
 
 
@@ -21,9 +21,7 @@ def postsJobseekerSwipes(jobseekerId, openingId):
 @bp.route('/openings/<int:openingId>/jobseekers/<int:jobseekerId>', methods=['POST'])
 def postsCompanySwipes(jobseekerId, openingId):
     data = request.json
-
     swipe = Swipe(jobseekers_id=jobseekerId, openings_id=openingId, created_at='now', swiped_right=data['swiped_right'], role='company')
     db.session.add(swipe)
     db.session.commit()
-
     return data
