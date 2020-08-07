@@ -1,9 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
-from validate_email import validate_email
-import re #i think its a default library
+# from validate_email import validate_email
+# import re #i think its a default library
 # from ..models import chats, companies, experiences, jobseekers, messages, openings, swipes
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy_validation import Model, Column
+# from sqlalchemy_validation import Model, Column
 
 db = SQLAlchemy()
 
@@ -143,6 +143,7 @@ class Message(MixinAsDict, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
+    role = db.Column(db.Text, nullable=False)
     chats_id = db.Column(db.Integer, db.ForeignKey('chats.id'), nullable=False)
 
     chat = db.relationship('Chat', back_populates='messages')
