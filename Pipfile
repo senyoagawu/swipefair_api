@@ -21,5 +21,7 @@ flask-cors = "*"
 werkzeug = "*"
 gunicorn = "*"
 validate-email = "*"
+faker = "*"
+
 [requires]
 python_version = "3.8"
