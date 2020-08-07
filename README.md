@@ -45,4 +45,3 @@
 
 ### Setup autocomplete for Heroku
 - heroku autocomplete
-

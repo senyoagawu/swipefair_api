@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.models import db, Jobseeker
+from app.models import db, Jobseeker, Opening
 # from ..auth import require_auth_jobseeker, require_auth_company
 
 bp = Blueprint("jobseekers", __name__, url_prefix='/api/jobseekers')
@@ -34,3 +34,16 @@ def edit_jobseeker(jobseekerId):
     except AssertionError as message:
         print(str(message))
         return jsonify({"error": str(message)}), 400
+
+
+@bp.route('/<int:jobseekerId>/notswipes/openings')
+def not_already_swiped_openings(jobseekerId):
+    openings = Opening.query.all()
+    # openings where jobseeker is not in swiped
+    openingsids = []
+    _ = [openingsids.extend(o.swipes) for o in openings]
+
+    unswipedOpenigns = Opening.query.filter(Opening.id.notin_([o.openings_id for o in openingsids])).all()
+    # all_jobseekers_id = [all]
+    print(unswipedOpenigns)
+    return {'Openings': [u.as_dict() for u in unswipedOpenigns]}
