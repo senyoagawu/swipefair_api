@@ -7,8 +7,6 @@ bp = Blueprint("openings", __name__, url_prefix='/api/openings')
 
 @bp.route('/')  # fetch all opening
 def fetchall_openings():
-    c1 = db.session.query(Opening).options(subqueryload(Opening.companies_id)).one() 
-    print(c1.as_dict())
     companies = Company.query.all()
     openings = Opening.query.all()
     company = [c.as_dict() for c in companies]
@@ -32,7 +30,6 @@ def fetch_one_opening(openingId):
 def post_openings(jobseekerId, chatId):
     data = request.json
 
-
     try: 
         opening = Opening(name=data['title'], type=data['title'], imgSrc=data['created_at'])
         db.session.add(opening)
@@ -44,12 +41,12 @@ def post_openings(jobseekerId, chatId):
 
 @bp.route('/<int:openingId>', methods=["DELETE"])
 def delete_item(openingId):
-  opening = Opening.query.get(openingId)
-  db.session.delete(opening)
-  db.session.commit()
-
-  return {'deletedId': itemId}
+    opening = Opening.query.get(openingId)
+    db.session.delete(opening)
+    db.session.commit()
+    return {'deletedId': openingId}
 
 @bp.route('/<int:companyId>/notswipes/jobseekers')  #fetch  all jobseekers who have not swiped right on your openings that you haven't swiped on
 def potential_jobseekers(companyId):
     return Company.potential_jobseekers(companyId)
+
