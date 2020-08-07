@@ -66,7 +66,7 @@ class Company(MixinAsDict, db.Model):
     def potential_jobseekers(companyId):
         joins = Opening.query.join(Company).all()
         all_swipes = [] #bare with me
-        [flat.extend(swipe) for swipe in [j.swipes for j in joins]]  #ok, i notices its not actually flattened
+        [all_swipes.extend(swipe) for swipe in [j.swipes for j in joins]]  #ok, i notices its not actually flattened
         not_swiped = [s for s in all_swipes if not s.swiped_right]
         jobseekers = [f.jobseeker.as_dict() for f in not_swiped]
         return jobseekers  #sorry are you saying return just joins
