@@ -19,7 +19,7 @@ def jobseeker_id(jobseekerId):
 @bp.route('/<int:jobseekerId>', methods=['PUT'])  # fetch a single jobseeker
 def edit_jobseeker(jobseekerId):
     data = request.json
-    jobseeker = Jobixseeker.query.filter(Jobseeker.id == jobseekerId).one()
+    jobseeker = Jobseeker.query.filter(Jobseeker.id == jobseekerId).one()
     try:
         jobseeker.name = data['name'],
         jobseeker.bio = data['bio'],
