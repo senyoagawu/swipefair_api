@@ -48,7 +48,7 @@ def delete_item(openingId):
   db.session.delete(opening)
   db.session.commit()
 
-  return {'deletedId': itemId}
+  return {'deletedId': openingId}
 
 @bp.route('/<int:companyId>/notswipes/jobseekers')  #fetch  all jobseekers who have not swiped right on your openings that you haven't swiped on
 def potential_jobseekers(companyId):
