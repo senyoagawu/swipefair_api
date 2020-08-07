@@ -1,12 +1,9 @@
 from flask import Blueprint, request, jsonify
 import jwt
-
-
 from app.models import db, Company
 import jwt
-# from ..models import Company
 from ..config import Configuration
-# from ..auth import require_auth
+# from ..auth import require_auth_jobseeker, require_auth_company
 
 bp = Blueprint("session_companies", __name__, url_prefix='/api/session_company')
 

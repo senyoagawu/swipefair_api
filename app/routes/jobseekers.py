@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.models import db, Jobseeker
-# from app.models.jobseekers import Jobseeker
-# from ..auth import require_auth
+# from ..auth import require_auth_jobseeker, require_auth_company
+
 bp = Blueprint("jobseekers", __name__, url_prefix='/api/jobseekers')
 
 @bp.route('/')  # fetch all jobseekers
@@ -19,8 +19,8 @@ def jobseeker_id(jobseekerId):
 @bp.route('/<int:jobseekerId>', methods=['PUT'])  # fetch a single jobseeker
 def edit_jobseeker(jobseekerId):
     data = request.json
+    jobseeker = Jobixseeker.query.filter(Jobseeker.id == jobseekerId).one()
     try:
-        jobseeker = Jobseeker.query.filter(Jobseeker.id == jobseekerId).one()
         jobseeker.name = data['name'],
         jobseeker.bio = data['bio'],
         jobseeker.image = data['image'],
