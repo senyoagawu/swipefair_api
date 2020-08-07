@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.models import db, Company, Swipe, Message, Chat
+from app.models import db, Company, Swipe, Message, Chat, Jobseeker
 # from app.models.companies import Jobseeker
 # from ..auth import require_auth
 bp = Blueprint("chats", __name__, url_prefix='/api')
@@ -12,7 +12,11 @@ def grabJobseekerChats(jobseekerId):
     # # Need .body maybe to finish up
     # data = [chat.as_dict()['companies_id'].email for chat in chats]
     data = [chat.as_dict() for chat in chats]
-    return {'chats': data}
+    comp_info = []
+    for info in data:
+        company = Company.query.filter(info['companies_id'] == Company.id).one().as_dict()
+        comp_info.append(company)
+    return {'chats': comp_info}
 
 
 # Grabs all of companies chat
@@ -22,7 +26,11 @@ def grabCompanyChats(companyId):
     # # Need .body maybe to finish up
     # data = [chat.as_dict()['companies_id'].email for chat in chats]
     data = [chat.as_dict() for chat in chats]
-    return {'chats': data}
+    jobseeker_info = []
+    for info in data:
+        jobseeker = Jobseeker.query.filter(info['jobseekers_id'] == Jobseeker.id).one().as_dict()
+        jobseeker_info.append(jobseeker)
+    return {'chats': jobseeker_info}
 
 
 # fetch specific jobseeker chats by chatID
@@ -33,11 +41,12 @@ def grabSingleJobseekerChats(jobseekerId, chatId):
     if currentChat.as_dict()['jobseekers_id'] != jobseekerId:
         return '404 ERROR'
 
-    chats = Chat.query.filter(chatId == Chat.id).all()
-
+    chats = Chat.query.filter(chatId == Chat.id).one().as_dict()
+    
     #TODO: need to grab name by ID instead of everything on the table
-    data = [chat.as_dict() for chat in chats]
-    return {'chats': data}
+    company_id = chats['companies_id']
+    company = Company.query.filter(company_id == Company.id).one().as_dict()
+    return company
 
 
 
@@ -52,7 +61,8 @@ def grabSingleCompanyChats(companyId, chatId):
     chats = Chat.query.filter(chatId == Chat.id).all()
 
     #TODO: need to grab name by ID instead of everything on the table
-    data = [chat.as_dict() for chat in chats]
-    return {'chats': data}
+    jobseeker_id = chats['jobseekers_id']
+    jobseeker = Jobseeker.query.filter(jobseeker_id == Jobseeker.id).one().as_dict()
+    return company
 
 
