@@ -56,6 +56,20 @@ def post_openings(companyId):
         print(str(message))
         return jsonify({"error": str(message)}), 400
 
+@bp.route('/companies/<int:companyId>', methods=['POST'])  # post a new opening
+def post_companies(companyId):
+    data = request.json
+    try:
+        opening = Opening(
+            companies_id=companyId, title=data['title'], description=data['description'], created_at='now')
+        db.session.add(opening)
+        db.session.commit()
+        return {"opening": opening.as_dict()}
+    except AssertionError as message:
+        print(str(message))
+        return jsonify({"error": str(message)}), 400
+
+
 @bp.route('/<int:openingId>', methods=["DELETE"])
 def delete_item(openingId):
     opening = Opening.query.get(openingId)

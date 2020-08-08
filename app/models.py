@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 # from validate_email import validate_email
-# import re #i think its a default library
+import re #i think its a default library
 # from ..models import chats, companies, experiences, jobseekers, messages, openings, swipes
 from werkzeug.security import generate_password_hash, check_password_hash
 # from sqlalchemy_validation import Model, Column
@@ -73,7 +73,7 @@ class Company(MixinAsDict, db.Model):
 
     @property
     def password(self):
-        return hashed_password
+        return self.hashed_password
 
     @password.setter
     def password(self, password):
@@ -113,7 +113,7 @@ class Jobseeker(MixinAsDict, db.Model):
     education_title = db.Column(db.String)
     education_date_start = db.Column(db.DateTime)
     education_date_end = db.Column(db.DateTime)
-
+    
     # is_valid = validate_email('example@example.com',check_mx=True)
     swipes = db.relationship('Swipe', back_populates='jobseeker')
     experiences = db.relationship('Experience', back_populates='jobseeker')
@@ -122,7 +122,7 @@ class Jobseeker(MixinAsDict, db.Model):
 
     @property
     def password(self):
-        return hashed_password
+        return self.hashed_password
 
     @password.setter
     def password(self, password):
@@ -135,7 +135,9 @@ class Jobseeker(MixinAsDict, db.Model):
         # is_valid = validate_email(self.email, check_mx=True)
         return not re.match("[^@]+@[^@]+\.[^@]+", email)
 
-
+    @classmethod
+    def find_by_email(cls, email):
+        return cls.query.filter(cls.email == email).one()
 
 class Message(MixinAsDict, db.Model):
     __tablename__ = 'messages'
