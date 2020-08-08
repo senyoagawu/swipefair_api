@@ -56,7 +56,7 @@ class Company(MixinAsDict, db.Model):
     company_name = db.Column(db.String(60), nullable=False)
     hashed_password = db.Column(db.String(128), nullable=False)
     bio = db.Column(db.Text)
-    image = db.Column(db.String)
+    image = db.Column(db.String, default="https://i.imgur.com/9U0akQE.png")
     size = db.Column(db.String(10))
     location = db.Column(db.String)
 
@@ -107,7 +107,7 @@ class Jobseeker(MixinAsDict, db.Model):
     email = db.Column(db.String(255), nullable=False, unique=True)
     hashed_password = db.Column(db.String(128), nullable=False)
     bio = db.Column(db.Text)
-    image = db.Column(db.String)
+    image = db.Column(db.String, default="https://i.imgur.com/kfQKjwm.png")
     title = db.Column(db.String)
     location = db.Column(db.String)
     education_title = db.Column(db.String)
