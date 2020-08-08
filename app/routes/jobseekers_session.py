@@ -23,7 +23,7 @@ def login():
     jobseeker = Jobseeker.query.filter(Jobseeker.email == data['email']).first() #? email or Jobseekername for login
     if not jobseeker:
         return {"error": "Email not found"}, 422
-    print(data['password'],jobseeker.password, generate_password_hash(data['password']))
+    print(data['password'], jobseeker.password, generate_password_hash(data['password']))
     if jobseeker.check_password(data['password']):
         access_token = jwt.encode({'email': jobseeker.email}, Configuration.SECRET_KEY)
         return {'access_token': access_token.decode('UTF-8'), 'jobseeker': jobseeker.as_dict()}
