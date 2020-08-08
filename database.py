@@ -1,5 +1,6 @@
 from faker import Faker
 from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash
 load_dotenv()
 
 fake = Faker()
@@ -46,7 +47,9 @@ with app.app_context():
 
     for index in range(5):
         db.session.add(Jobseeker(name=fake.name(), email=fake.email(), hashed_password=fake.password(), bio=fake.text()))
-
+    demouser = Jobseeker(name='demouser', email='demo@gmail.com', hashed_password=generate_password_hash('password'), bio='stuff about stuff')
+    db.session.add(demouser)
+    
     for index in range(5):
         db.session.add(Company(company_name=fake.company(), email=fake.email(), hashed_password=fake.password(), bio=fake.text()))
     
