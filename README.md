@@ -35,10 +35,7 @@
 
 
 ### For Changes to DB:
-- heroku run npx sequelize-cli db:seed:undo:all
-- heroku run npx sequelize-cli db:migrate:undo:all
-- heroku run npx sequelize-cli db:migrate
-- heroku run npx sequelize-cli db:seed:all
+- heroku run python database.py
 
 ### Monitor Logs on Heroku
 - heroku logs --tail
