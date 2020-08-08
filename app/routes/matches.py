@@ -18,7 +18,7 @@ def jobseeker_matches(jobseekerId):
         if swipe.compare() in 
         [s.compare() for s in swipesCompany]
     ]
-    return {'matches': {'openings': swipes}}
+    return {'openings-matched': swipes}
 
 @bp.route('/companies/<int:companyId>/matches', strict_slashes=False)  # returns the jobseekers a company has swiped on
 def company_matches(companyId):
@@ -38,4 +38,4 @@ def company_matches(companyId):
         swipe.jobseeker.as_dict()
         for swipe in swipesJobseekers 
         if swipe.compare() in company]
-    return {'matches': {'jobseekers': swipes}}
+    return {'jobseekers-matched': swipes}

@@ -42,15 +42,17 @@ def fetch_one_opening(openingId):
     dic.update(opening.company.as_dict())
     return {'opening': dic}
 
-@bp.route('/', methods=['POST'])  # fetch a single company
-def post_openings(jobseekerId, chatId):
+
+@bp.route('companies/<int:companyId>', methods=['POST'])  # post a new opening
+def post_openings(companyId):
     data = request.json
 
-    try: 
-        opening = Opening(name=data['title'], type=data['title'], imgSrc=data['created_at'])
+    try:
+        opening = Opening(
+            companies_id=companyId, title=data['title'], description=data['description'], created_at='now')
         db.session.add(opening)
         db.session.commit()
-        return {"opening": opening.to_dict()}
+        return {"opening": opening.as_dict()}
     except AssertionError as message:
         print(str(message))
         return jsonify({"error": str(message)}), 400
