@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.models import db, Opening, Company
+from app.models import db, Opening, Company, Jobseeker
 from sqlalchemy.orm import joinedload, subqueryload
 # from app.models.opening import Opening
 # from ..auth import require_auth
@@ -11,11 +11,12 @@ def fetchall_openings():
     openings = Opening.query.all()
     company = [c.as_dict() for c in companies]
     data = [opening.as_dict() for opening in openings]
-    openings_info = []
+    openings_info = [] 
 
     for info in data:
         company = Company.query.filter(info['companies_id'] == Company.id).one().as_dict()
         openingsAndCompaniesInfo = {}
+        openingsAndCompaniesInfo['id'] = info['id']
         openingsAndCompaniesInfo['image'] = company['image']
         openingsAndCompaniesInfo['company_name'] = company['company_name']
         openingsAndCompaniesInfo['email'] = company['email']
@@ -42,6 +43,33 @@ def fetch_one_opening(openingId):
     dic.update(opening.company.as_dict())
     return {'opening': dic}
 
+@bp.route('/notswiped/<int:jobseekerId>') #openings you haven't swiped on
+def opening_not_swiped(jobseekerId):
+    companies = Company.query.all()
+    jobseeker = Jobseeker.query.filter(Jobseeker.id == jobseekerId).one()
+    swipes = [ j for j in jobseeker.swipes]
+    openingsId = [s.opening.id for s in swipes]
+    openings = Opening.query.filter(Opening.id.notin_(openingsId)).all()
+    company = [c.as_dict() for c in companies]
+    data = [opening.as_dict() for opening in openings]
+    openings_info = [] 
+
+    for info in data:
+        company = Company.query.filter(info['companies_id'] == Company.id).one().as_dict()
+        openingsAndCompaniesInfo = {}
+        openingsAndCompaniesInfo['id'] = info['id']
+        openingsAndCompaniesInfo['image'] = company['image']
+        openingsAndCompaniesInfo['company_name'] = company['company_name']
+        openingsAndCompaniesInfo['email'] = company['email']
+        openingsAndCompaniesInfo['size'] = company['size']
+        openingsAndCompaniesInfo['location'] = company['location']
+        openingsAndCompaniesInfo['bio'] = company['bio']
+        openingsAndCompaniesInfo['title'] = info['title']
+        openingsAndCompaniesInfo['description'] = info['description']
+        openings_info.append(openingsAndCompaniesInfo)
+
+    payload = {"opening": openings_info} # how to merge?
+    return payload
 
 @bp.route('/companies/<int:companyId>', methods=['POST'])  # post a new opening
 def post_openings(companyId):
