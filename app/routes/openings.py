@@ -11,6 +11,7 @@ def fetchall_openings():
     openings = Opening.query.all()
     company = [c.as_dict() for c in companies]
     data = [opening.as_dict() for opening in openings]
+  
     openings_info = [] 
 
     for info in data:
@@ -52,6 +53,7 @@ def opening_not_swiped(jobseekerId):
     openings = Opening.query.filter(Opening.id.notin_(openingsId)).all()
     company = [c.as_dict() for c in companies]
     data = [opening.as_dict() for opening in openings]
+    print('============', data[0])
     openings_info = [] 
 
     for info in data:

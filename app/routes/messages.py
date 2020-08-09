@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.models import db, Company, Swipe, Message, Chat, Jobseeker
+from app.models import db, Company, Swipe, Message, Chat, Jobseeker, Opening
 # from app.models.companies import Jobseeker
 # from ..auth import require_auth
 bp = Blueprint("messages", __name__, url_prefix='/api')
@@ -10,8 +10,13 @@ def grabJobseekerMessages(jobseekerId, chatId):
     if currentChat.as_dict()['jobseekers_id'] != jobseekerId:
         return '404 ERROR'
     messages = Message.query.filter(chatId == Message.chats_id).all()
+    openings = Opening.query.filter(currentChat.companies_id == Opening.companies_id).all()
     chattingWith = Company.query.filter(currentChat.companies_id == Company.id).one()
     chattingWithInfo = chattingWith.as_dict()
+    openingsList = []
+    for opening in openings:
+        openingsList.append(opening.as_dict())
+    chattingWithInfo['openings'] = openingsList
     data = [{'message': message.as_dict()['body'], 'role': message.as_dict()['role']} for message in messages]
     return {'messages': data, 'chatWithInfo': [chattingWithInfo], 'name': chattingWithInfo['company_name']}
 
