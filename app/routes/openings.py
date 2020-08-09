@@ -11,6 +11,7 @@ def fetchall_openings():
     openings = Opening.query.all()
     company = [c.as_dict() for c in companies]
     data = [opening.as_dict() for opening in openings]
+  
     openings_info = [] 
 
     for info in data:
@@ -48,10 +49,12 @@ def opening_not_swiped(jobseekerId):
     companies = Company.query.all()
     jobseeker = Jobseeker.query.filter(Jobseeker.id == jobseekerId).one()
     swipes = [ j for j in jobseeker.swipes]
-    openingsId = [s.opening.id for s in swipes]
+    jobseeker_swipes = [s for s in swipes if s.role == 'jobseeker']
+    openingsId = [s.opening.id for s in jobseeker_swipes]
     openings = Opening.query.filter(Opening.id.notin_(openingsId)).all()
     company = [c.as_dict() for c in companies]
     data = [opening.as_dict() for opening in openings]
+    print('============', data[0])
     openings_info = [] 
 
     for info in data:
