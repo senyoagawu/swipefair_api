@@ -11,14 +11,13 @@ def jobseeker_matches(jobseekerId):
         .filter(Swipe.role == 'jobseeker').all()
     swipesCompany = Swipe.query.filter(Swipe.jobseekers_id == jobseekerId)\
         .filter(Swipe.role == 'company').all()
-    company = [s.compare() for s in swipesCompany]
+    company_to_compare = [s.compare() for s in swipesCompany]
     swipes = [
-        swipe.opening.as_dict() 
+        {'swipe': swipe.as_dict(), 'opening': swipe.opening.as_dict(), 'company': swipe.opening.company.as_dict()}
         for swipe in swipesJobseeker 
-        if swipe.compare() in 
-        [s.compare() for s in swipesCompany]
+        if swipe.compare() in company_to_compare
     ]
-    return {'openings-matched': swipes}
+    return {'matches': swipes}
 
 @bp.route('/companies/<int:companyId>/matches', strict_slashes=False)  # returns the jobseekers a company has swiped on
 def company_matches(companyId):
@@ -35,7 +34,12 @@ def company_matches(companyId):
         .filter(Swipe.role == 'company').all()
     company = [s.compare() for s in swipesCompany]
     swipes = [
-        swipe.jobseeker.as_dict()
+        {
+            'swipe': swipe.as_dict(),
+            'jobseeker': swipe.jobseeker.as_dict(),
+            'jobseeker_experiences': [e.as_dict() for e in swipe.jobseeker.experiences]
+         }
         for swipe in swipesJobseekers 
-        if swipe.compare() in company]
-    return {'jobseekers-matched': swipes}
+        if swipe.compare() in company
+    ]
+    return {'matched': swipes}
