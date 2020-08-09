@@ -11,7 +11,7 @@ def grabJobseekerMessages(jobseekerId, chatId):
         return '404 ERROR'
     messages = Message.query.filter(chatId == Message.chats_id).all()
     
-    data = [(message.as_dict()['body'], message.as_dict()['role']) for message in messages]
+    data = [{'message': message.as_dict()['body'], 'role': message.as_dict()['role']} for message in messages]
     return {'messages': data}
 
 # # fetch all company messages
@@ -23,7 +23,7 @@ def grabCompanyMessages(companyId, chatId):
         return '404 ERROR'
     messages = Message.query.filter(chatId == Message.chats_id).all()
 
-    data = [(message.as_dict()['body'], message.as_dict()['role']) for message in messages]
+    data = [{'message': message.as_dict()['body'], 'role': message.as_dict()['role']} for message in messages]
     return {'messages': data}
 
 # post a single message as a jobseeker

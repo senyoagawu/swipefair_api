@@ -15,6 +15,7 @@ def grabJobseekerChats(jobseekerId):
     comp_info = []
     for info in data:
         company = Company.query.filter(info['companies_id'] == Company.id).one().as_dict()
+        company['chatId'] = info['id']
         comp_info.append(company)
     return {'chats': comp_info}
 
@@ -29,6 +30,7 @@ def grabCompanyChats(companyId):
     jobseeker_info = []
     for info in data:
         jobseeker = Jobseeker.query.filter(info['jobseekers_id'] == Jobseeker.id).one().as_dict()
+        jobseeker['chatId'] = info['id']
         jobseeker_info.append(jobseeker)
     return {'chats': jobseeker_info}
 

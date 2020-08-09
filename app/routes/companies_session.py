@@ -10,7 +10,7 @@ bp = Blueprint("session_companies", __name__, url_prefix='/api/session_company')
 @bp.route('/', methods=["POST"])  # LOGIN/start new session 
 def login():
     data = request.json
-    #   print('===================', data)
+    # print('===================', data)
     company = Company.query.filter(Company.email == data['email']).first() #? email or Companyname for login
     if not company:
         return {"error": "Email not found"}, 422
