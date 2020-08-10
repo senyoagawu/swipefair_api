@@ -6,6 +6,13 @@ bp = Blueprint("swipes", __name__, url_prefix='/api')
 
 
 # posts swipe left or right via jobseeker
+@bp.route('/swipes/jobseekers/<int:jobseekerId>')
+def getJobseekerSwipes(jobseekerId):
+    swipes = Swipe.query.filter(jobseekerId == Swipe.jobseekers_id).all()
+    data = [swipe.as_dict() for swipe in swipes]
+    
+    return {'swipes': data}
+
 @bp.route('/jobseekers/<int:jobseekerId>/openings/<int:openingId>', methods=['POST'])
 def postsJobseekerSwipes(jobseekerId, openingId):
     data = request.json
@@ -24,4 +31,4 @@ def postsCompanySwipes(jobseekerId, openingId):
     swipe = Swipe(jobseekers_id=jobseekerId, openings_id=openingId, created_at='now', swiped_right=data['swiped_right'], role='company')
     db.session.add(swipe)
     db.session.commit()
-    return data
+    return 'data'

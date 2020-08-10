@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.models import db, Company, Swipe, Message, Chat, Jobseeker
+from app.models import db, Company, Swipe, Message, Chat, Jobseeker, Opening
 # from app.models.companies import Jobseeker
 # from ..auth import require_auth
 bp = Blueprint("chats", __name__, url_prefix='/api')
@@ -68,3 +68,26 @@ def grabSingleCompanyChats(companyId, chatId):
     return company
 
 
+@bp.route('/jobseekers/<int:jobseekerId>/<int:openingId>/chats', methods=['GET'])
+def getExistingChats(jobseekerId, openingId):
+    # data = request.json
+    companyId = Opening.query.filter(openingId == Opening.id).one().companies_id
+    boolean = ''
+    try:
+        Chat.query.filter(jobseekerId == Chat.jobseekers_id, companyId == Chat.companies_id).one()
+        boolean = True
+    except:
+        boolean = False
+    
+    return {'boolean':boolean}
+
+
+@bp.route('/jobseekers/<int:jobseekerId>/<int:openingId>/chats', methods=['POST'])
+def postsNewChats(jobseekerId, openingId):
+    # data = request.json
+    companyId = Opening.query.filter(openingId == Opening.id).one().companies_id
+    chat = Chat(jobseekers_id=jobseekerId, companies_id=companyId)
+    db.session.add(chat)
+    db.session.commit()
+
+    return 'chat'
