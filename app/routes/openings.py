@@ -44,7 +44,7 @@ def fetch_one_opening(openingId):
     dic.update(opening.company.as_dict())
     return {'opening': dic}
 
-@bp.route('/notswiped/<int:jobseekerId>') #openings you haven't swiped on
+@bp.route('/notswiped/jobseeker/<int:jobseekerId>') #openings you haven't swiped on
 def opening_not_swiped(jobseekerId):
     companies = Company.query.all()
     jobseeker = Jobseeker.query.filter(Jobseeker.id == jobseekerId).one()
@@ -54,7 +54,6 @@ def opening_not_swiped(jobseekerId):
     openings = Opening.query.filter(Opening.id.notin_(openingsId)).all()
     company = [c.as_dict() for c in companies]
     data = [opening.as_dict() for opening in openings]
-    print('============', data[0])
     openings_info = [] 
 
     for info in data:
