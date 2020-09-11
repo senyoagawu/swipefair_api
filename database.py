@@ -18,14 +18,16 @@ with app.app_context():
     db.create_all()
 
     for index in range(5):
-        db.session.add(Jobseeker(name=fake.name(), email=fake.email(), hashed_password=fake.password(), bio=fake.text()))
+        db.session.add(Jobseeker(name=fake.name(), email=fake.email(), hashed_password=generate_password_hash('password'), bio=fake.text()))
         
-    demouser = Jobseeker(name='demouser', email='demo@gmail.com', hashed_password=generate_password_hash('password'), bio='stuff about stuff')
+    demoJobseeker = Jobseeker(name='demoJobseeker', email='demoJobseeker@gmail.com', hashed_password=generate_password_hash('password'), bio='stuff about stuff')
+    demoCompany = Company(company_name='demoCompany', email='demoCompany@gmail.com', hashed_password=generate_password_hash('password'), bio='stuff about stuff')
     
-    db.session.add(demouser)
+    db.session.add(demoJobseeker)
+    db.session.add(demoCompany)
     
     for index in range(5):
-        db.session.add(Company(company_name=fake.company(), email=fake.email(), hashed_password=fake.password(), bio=fake.text()))
+        db.session.add(Company(company_name=fake.company(), email=fake.email(), hashed_password=generate_password_hash('password'), bio=fake.text()))
     
 
 

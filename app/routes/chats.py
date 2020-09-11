@@ -65,11 +65,11 @@ def grabSingleCompanyChats(companyId, chatId):
     #TODO: need to grab name by ID instead of everything on the table
     jobseeker_id = chats['jobseekers_id']
     jobseeker = Jobseeker.query.filter(jobseeker_id == Jobseeker.id).one().as_dict()
-    return company
+    return jobseeker
 
 
 @bp.route('/jobseekers/<int:jobseekerId>/<int:openingId>/chats', methods=['GET'])
-def getExistingChats(jobseekerId, openingId):
+def getJobseekerExistingChats(jobseekerId, openingId):
     # data = request.json
     companyId = Opening.query.filter(openingId == Opening.id).one().companies_id
     boolean = ''
@@ -83,9 +83,37 @@ def getExistingChats(jobseekerId, openingId):
 
 
 @bp.route('/jobseekers/<int:jobseekerId>/<int:openingId>/chats', methods=['POST'])
-def postsNewChats(jobseekerId, openingId):
+def postsJobseekerNewChats(jobseekerId, openingId):
     # data = request.json
     companyId = Opening.query.filter(openingId == Opening.id).one().companies_id
+    chat = Chat(jobseekers_id=jobseekerId, companies_id=companyId)
+    db.session.add(chat)
+    db.session.commit()
+
+    return 'chat'
+
+
+@bp.route('/companies/<int:companyId>/<int:openingId>/chats', methods=['GET'])
+def getCompanyExistingChats(companyId, openingId):
+    # data = request.json
+    jobseekerId = Opening.query.filter(
+        openingId == Opening.id).one().companies_id
+    boolean = ''
+    try:
+        Chat.query.filter(jobseekerId == Chat.jobseekers_id,
+                          companyId == Chat.companies_id).one()
+        boolean = True
+    except:
+        boolean = False
+
+    return {'boolean': boolean}
+
+
+@bp.route('/companies/<int:companyId>/<int:openingId>/chats', methods=['POST'])
+def postsCompanyNewChats(companyId, openingId):
+    # data = request.json
+    jobseekerId = Opening.query.filter(
+        openingId == Opening.id).one().companies_id
     chat = Chat(jobseekers_id=jobseekerId, companies_id=companyId)
     db.session.add(chat)
     db.session.commit()
