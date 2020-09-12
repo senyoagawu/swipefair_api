@@ -52,6 +52,7 @@ def opening_not_swiped(jobseekerId):
     jobseeker_swipes = [s for s in swipes if s.role == 'jobseeker']
     openingsId = [s.opening.id for s in jobseeker_swipes]
     openings = Opening.query.filter(Opening.id.notin_(openingsId)).all()
+    print(openings)
     company = [c.as_dict() for c in companies]
     data = [opening.as_dict() for opening in openings]
     openings_info = [] 
@@ -61,7 +62,7 @@ def opening_not_swiped(jobseekerId):
         openingsAndCompaniesInfo = {}
         openingsAndCompaniesInfo['id'] = info['id']
         openingsAndCompaniesInfo['image'] = company['image']
-        openingsAndCompaniesInfo['company_name'] = company['company_name']
+        openingsAndCompaniesInfo['name'] = company['company_name']
         openingsAndCompaniesInfo['email'] = company['email']
         openingsAndCompaniesInfo['size'] = company['size']
         openingsAndCompaniesInfo['location'] = company['location']
@@ -112,6 +113,43 @@ def delete_item(openingId):
 #     return {'jobseekers': Company.potential_jobseekers(companyId)}
 
 
-@bp.route('/notswipes/<int:companyId>/company')
+@bp.route('/notswiped/company/<int:companyId>')
 def potential_jobseekers(companyId):
-    return {'jobseekers': Company.potential_jobseekers(companyId)}
+    jobseekers = Jobseeker.query.all()
+    company = Company.query.filter(Company.id == companyId).one()
+    openings = Opening.query.filter(Opening.companies_id == companyId).all()
+    swipes = []
+    for opening in openings:
+        for swipesPerOpening in opening.swipes:
+            swipes.append(swipesPerOpening)
+    company_swipes = [s for s in swipes if s.role == 'company']
+    jobseekersId = [s.jobseeker.id for s in company_swipes]
+    jobseekersList = Jobseeker.query.filter(Jobseeker.id.notin_(jobseekersId)).all()
+    # openings = Opening.query.filter(Opening.id.notin_(openingsId)).all()
+    jobseeker = [j.as_dict() for j in jobseekersList]
+    data = [opening.as_dict() for o in openings]
+    # print(data)
+    # print(jobseeker)
+
+    jobseekers_info = []
+
+    for info in jobseeker:
+        # print('hi')
+        openings = Opening.query.filter(Opening.companies_id == companyId).all()
+        for opening in openings:
+            openingsAndJobseekersInfo = {}
+            openingsAndJobseekersInfo['id'] = info['id']
+            openingsAndJobseekersInfo['image'] = info['image']
+            openingsAndJobseekersInfo['name'] = info['name']
+            openingsAndJobseekersInfo['email'] = info['email']
+            openingsAndJobseekersInfo['size'] = info['education_title']
+            openingsAndJobseekersInfo['location'] = info['location']
+            openingsAndJobseekersInfo['bio'] = info['bio']
+            openingsAndJobseekersInfo['title'] = opening.as_dict()['title']
+            openingsAndJobseekersInfo['description'] = opening.as_dict()['description']
+            jobseekers_info.append(openingsAndJobseekersInfo)
+
+    payload = {"jobseekers": jobseekers_info}  # how to merge?
+    # print(payload)
+    return payload
+    # return {'jobseekers': Company.potential_jobseekers(companyId)}

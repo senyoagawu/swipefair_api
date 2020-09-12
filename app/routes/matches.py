@@ -42,4 +42,4 @@ def company_matches(companyId):
         for swipe in swipesJobseekers 
         if swipe.compare() in company
     ]
-    return {'matched': swipes}
+    return {'matches': swipes}

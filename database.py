@@ -62,9 +62,9 @@ with app.app_context():
     companies = Company.query.all()
     jobseekers = Jobseeker.query.all()
     openings = []
-    _ = [openings.extend(c.openings) for c in companies]
-    for opening in openings:
-        for jobseeker in jobseekers:
-            db.session.add(Swipe(jobseekers_id=jobseeker.id, openings_id=opening.id, created_at='now', swiped_right=True, super_swipe=True, role='company'))
+    # _ = [openings.extend(c.openings) for c in companies]
+    # for opening in openings:
+    #     for jobseeker in jobseekers:
+    #         db.session.add(Swipe(jobseekers_id=jobseeker.id, openings_id=opening.id, created_at='now', swiped_right=False, super_swipe=True, role='company'))
 
     db.session.commit()
