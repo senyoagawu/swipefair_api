@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from app.models import db, Jobseeker, Opening
+from ..config import Configuration
 # from ..auth import require_auth_jobseeker, require_auth_company
 
 bp = Blueprint("jobseekers", __name__, url_prefix='/api/jobseekers')
@@ -47,3 +48,13 @@ def not_already_swiped_openings(jobseekerId):
     # all_jobseekers_id = [all]
     print(unswipedOpenigns)
     return {'Openings': [u.as_dict() for u in unswipedOpenigns]}
+
+
+@bp.route('/files')
+def files():
+    s3_resource = boto3.resource('s3')
+    my_bucket = s3_resource.Bucket(Configuration.S3_BUCKET)
+    summaries = my_bucket.objects.all()
+    for o in summaries: 
+        print(o.key)
+    return {'message': 'bucket printed successfully'}, 200
