@@ -138,7 +138,7 @@ def potential_jobseekers(companyId):
         openings = Opening.query.filter(Opening.companies_id == companyId).all()
         for opening in openings:
             openingsAndJobseekersInfo = {}
-            openingsAndJobseekersInfo['id'] = info['id']
+            openingsAndJobseekersInfo['id'] = opening.as_dict()['id']
             openingsAndJobseekersInfo['image'] = info['image']
             openingsAndJobseekersInfo['name'] = info['name']
             openingsAndJobseekersInfo['email'] = info['email']
