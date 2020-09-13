@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.models import db, Jobseeker, Opening
 from ..config import Configuration
+import boto3
 # from ..auth import require_auth_jobseeker, require_auth_company
 
 bp = Blueprint("jobseekers", __name__, url_prefix='/api/jobseekers')
