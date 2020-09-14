@@ -84,11 +84,11 @@ def edit_jobseeker_with_image(jobseekerId):
     data = request.form
     print(data)
 
-    # file = request.files['image']
+    file = request.files['image']
 
-    # s3_resource = boto3.resource('s3')
-    # my_bucket = s3_resource.Bucket(Configuration.S3_BUCKET)
-    # my_bucket.Object(file.filename).put(Body=file, ACL='public-read')
+    s3_resource = boto3.resource('s3')
+    my_bucket = s3_resource.Bucket(Configuration.S3_BUCKET)
+    my_bucket.Object(file.filename).put(Body=file, ACL='public-read')
 
     jobseeker = Jobseeker.query.filter(Jobseeker.id == jobseekerId).one()
     if jobseeker: 
@@ -102,4 +102,4 @@ def edit_jobseeker_with_image(jobseekerId):
         jobseeker.education_date_end = data['education_date_end']
         db.session.commit()
         return {'jobseeker': jobseeker.as_dict()}
-    return {"message": "uploaded"}, 200
+    # return {"message": "something went wrong"}, 500
