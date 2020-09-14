@@ -22,6 +22,7 @@ werkzeug = "*"
 gunicorn = "*"
 validate-email = "*"
 faker = "*"
+boto3 = "*"
 
 [requires]
 python_version = "3.8"
