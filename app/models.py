@@ -9,7 +9,7 @@ db = SQLAlchemy()
 
 
 class MixinAsDict:
-    def as_dict(self, skip=[]):
+    def as_dict(self, skip=["hashed_password"]):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns if c.name not in skip}
 
 #for reference
