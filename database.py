@@ -31,16 +31,16 @@ with app.app_context():
     
 
 
-    db.session.add(Chat(jobseekers_id=1, companies_id=1))
-    db.session.add(Chat(jobseekers_id=1, companies_id=3))
-    db.session.add(Chat(jobseekers_id=2, companies_id=1))
-    db.session.add(Chat(jobseekers_id=2, companies_id=3))
-    db.session.add(Chat(jobseekers_id=3, companies_id=3))
-    db.session.add(Chat(jobseekers_id=3, companies_id=4))
-    db.session.add(Chat(jobseekers_id=4, companies_id=2))
-    db.session.add(Chat(jobseekers_id=4, companies_id=4))
-    db.session.add(Chat(jobseekers_id=5, companies_id=2))
-    db.session.add(Chat(jobseekers_id=5, companies_id=5))
+    # db.session.add(Chat(jobseekers_id=1, companies_id=1))
+    # db.session.add(Chat(jobseekers_id=1, companies_id=3))
+    # db.session.add(Chat(jobseekers_id=2, companies_id=1))
+    # db.session.add(Chat(jobseekers_id=2, companies_id=3))
+    # db.session.add(Chat(jobseekers_id=3, companies_id=3))
+    # db.session.add(Chat(jobseekers_id=3, companies_id=4))
+    # db.session.add(Chat(jobseekers_id=4, companies_id=2))
+    # db.session.add(Chat(jobseekers_id=4, companies_id=4))
+    # db.session.add(Chat(jobseekers_id=5, companies_id=2))
+    # db.session.add(Chat(jobseekers_id=5, companies_id=5))
 
     jobs = [fake.job(), fake.job(), fake.job(), fake.job(), fake.job()]
     db.session.add(Experience(title=jobs[0], jobseekers_id=1, date_start='now', date_end='now', description=fake.text()))
