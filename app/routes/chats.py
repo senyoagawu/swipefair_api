@@ -93,11 +93,14 @@ def postsJobseekerNewChats(jobseekerId, openingId):
     return 'chat'
 
 
-@bp.route('/companies/<int:companyId>/<int:openingId>/chats', methods=['GET'])
-def getCompanyExistingChats(companyId, openingId):
-    # data = request.json
-    jobseekerId = Opening.query.filter(
-        openingId == Opening.id).one().companies_id
+@bp.route('/companies/<int:companyId>/<int:openingId>/<int:jobseekerId>/chats', methods=['GET'])
+def getCompanyExistingChats(companyId, openingId, jobseekerId):
+
+    # jobseekerIds = Swipe.query.filter(openingId == Swipe.openings_id).all()
+    # for jobseekerId in jobseekerIds:
+    #     if jobseekerId.jobseekers_id == data:
+    #         realId = jobseekerId.jobseekers_id
+
     boolean = ''
     try:
         Chat.query.filter(jobseekerId == Chat.jobseekers_id,
@@ -106,15 +109,23 @@ def getCompanyExistingChats(companyId, openingId):
     except:
         boolean = False
 
+    print(boolean)
     return {'boolean': boolean}
 
 
-@bp.route('/companies/<int:companyId>/<int:openingId>/chats', methods=['POST'])
-def postsCompanyNewChats(companyId, openingId):
+@bp.route('/companies/<int:companyId>/<int:openingId>/<int:jobseekerId>/chats', methods=['POST'])
+def postsCompanyNewChats(companyId, openingId, jobseekerId):
     # data = request.json
-    jobseekerId = Opening.query.filter(
-        openingId == Opening.id).one().companies_id
+    # data = request.json
+    # realId = None
+    # jobseekerIds = Swipe.query.filter(openingId == Swipe.openings_id).all()
+    # for jobseekerId in jobseekerIds:
+    #     if jobseekerId.jobseekers_id == data:
+    #         realId = jobseekerId.jobseekers_id
+
+    print(jobseekerId)
     chat = Chat(jobseekers_id=jobseekerId, companies_id=companyId)
+
     db.session.add(chat)
     db.session.commit()
 
