@@ -9,7 +9,7 @@ db = SQLAlchemy()
 
 
 class MixinAsDict:
-    def as_dict(self, skip=[]):
+    def as_dict(self, skip=["hashed_password"]):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns if c.name not in skip}
 
 #for reference
@@ -62,14 +62,14 @@ class Company(MixinAsDict, db.Model):
 
     openings = db.relationship('Opening', back_populates='company')
     chats = db.relationship('Chat', back_populates='company')
-# my eyes aint what they used to be
+
     def potential_jobseekers(companyId):
         joins = Opening.query.join(Company).all()
         all_swipes = [] #bare with me
         [all_swipes.extend(swipe) for swipe in [j.swipes for j in joins]]  #ok, i notices its not actually flattened
         not_swiped = [s for s in all_swipes if not s.swiped_right]
         jobseekers = [f.jobseeker.as_dict() for f in not_swiped]
-        return jobseekers  #sorry are you saying return just joins
+        return jobseekers  
 
     @property
     def password(self):
