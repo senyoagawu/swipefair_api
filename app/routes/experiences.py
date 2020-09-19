@@ -10,8 +10,8 @@ bp = Blueprint("experiences", __name__, url_prefix='/api/jobseekers')
 def grabJobseekerExperiences(jobseekerId):
     experiences = Experience.query.filter(jobseekerId == Experience.jobseekers_id).all()
 
-    data = [(experience.as_dict()['title'], experience.as_dict()['description'])
-            for experience in experiences]
+    # data = [(experience.as_dict()['title'], experience.as_dict()['description'])
+    data = [(experience.as_dict()) for experience in experiences]
     return {'experiences': data}
 
 
@@ -33,6 +33,7 @@ def grabOneJobseekerExperiences(jobseekerId, experienceId):
 @bp.route('/<int:jobseekerId>/experiences', methods=['POST'])
 def post_jobseeker_experience(jobseekerId):
     data = request.json
+
     # print(f"\n\n\nDATA\n{data}\n\n\n")
     experience = Experience(title=data['title'], jobseekers_id=jobseekerId,
                             date_start=data['date_start'],  date_end=data['date_end'],
@@ -40,7 +41,8 @@ def post_jobseeker_experience(jobseekerId):
     db.session.add(experience)
     db.session.commit()
     # print(message.body)
-    return {'experiences': [data['title'], data['description']]}
+    # return {'experiences': [data['title'], data['description']]}
+    return {'experiences': [data]}
 
 
 @bp.route('/<int:jobseekerId>/experiences/<int:experienceId>', methods=['PUT'])
