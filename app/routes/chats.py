@@ -65,11 +65,11 @@ def grabSingleCompanyChats(companyId, chatId):
     #TODO: need to grab name by ID instead of everything on the table
     jobseeker_id = chats['jobseekers_id']
     jobseeker = Jobseeker.query.filter(jobseeker_id == Jobseeker.id).one().as_dict()
-    return company
+    return jobseeker
 
 
 @bp.route('/jobseekers/<int:jobseekerId>/<int:openingId>/chats', methods=['GET'])
-def getExistingChats(jobseekerId, openingId):
+def getJobseekerExistingChats(jobseekerId, openingId):
     # data = request.json
     companyId = Opening.query.filter(openingId == Opening.id).one().companies_id
     boolean = ''
@@ -83,10 +83,49 @@ def getExistingChats(jobseekerId, openingId):
 
 
 @bp.route('/jobseekers/<int:jobseekerId>/<int:openingId>/chats', methods=['POST'])
-def postsNewChats(jobseekerId, openingId):
+def postsJobseekerNewChats(jobseekerId, openingId):
     # data = request.json
     companyId = Opening.query.filter(openingId == Opening.id).one().companies_id
     chat = Chat(jobseekers_id=jobseekerId, companies_id=companyId)
+    db.session.add(chat)
+    db.session.commit()
+
+    return 'chat'
+
+
+@bp.route('/companies/<int:companyId>/<int:openingId>/<int:jobseekerId>/chats', methods=['GET'])
+def getCompanyExistingChats(companyId, openingId, jobseekerId):
+
+    # jobseekerIds = Swipe.query.filter(openingId == Swipe.openings_id).all()
+    # for jobseekerId in jobseekerIds:
+    #     if jobseekerId.jobseekers_id == data:
+    #         realId = jobseekerId.jobseekers_id
+
+    boolean = ''
+    try:
+        Chat.query.filter(jobseekerId == Chat.jobseekers_id,
+                          companyId == Chat.companies_id).one()
+        boolean = True
+    except:
+        boolean = False
+
+    print(boolean)
+    return {'boolean': boolean}
+
+
+@bp.route('/companies/<int:companyId>/<int:openingId>/<int:jobseekerId>/chats', methods=['POST'])
+def postsCompanyNewChats(companyId, openingId, jobseekerId):
+    # data = request.json
+    # data = request.json
+    # realId = None
+    # jobseekerIds = Swipe.query.filter(openingId == Swipe.openings_id).all()
+    # for jobseekerId in jobseekerIds:
+    #     if jobseekerId.jobseekers_id == data:
+    #         realId = jobseekerId.jobseekers_id
+
+    print(jobseekerId)
+    chat = Chat(jobseekers_id=jobseekerId, companies_id=companyId)
+
     db.session.add(chat)
     db.session.commit()
 

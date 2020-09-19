@@ -1,47 +1,43 @@
-# Flask-React-App
-## Starting frontend
-- Development:cd frontend && npm run start:development
-- Production: cd frontend && npm start
-## Starting backend
-- cd backend && pipenv run flask run
-## Github Workflow
-### Pull to update local branch to include master
-- git checkout master
-- git pull
-- git checkout 'local branch'
-- git merge master
-- handle merge conflicts to finish merge
-### Pushing local changes
-- git add 'files to add'
-- git commit -m 'message'
-- git push
-- select on compare changes menu (base: master  compare: 'local branch name')
-- create pull request on github and leave comments
-- wait for 1 team member to approve
-- merge changes
-- delete local branch
+# SwipeFair
+An application that combines the uses of Tinder and LinkedIn.  By being able to swipe whether you're a company looking to hire or a person who is looking for a job.
 
-### Enter into CLI
-- heroku config:set FLASK_APP=swipefair.py
-- heroku config:set FLASK_ENV=development
-## Heroku Workflow
-- git push heroku master
+# Live Link
+<a href="https://swipefair.herokuapp.com/login">LIVE LINK HERE</a>
 
-### Provision a database for Heroku
-- heroku addons:create heroku-postgresql:hobby-dev
+# Repo to FrontEnd
+<a href="https://github.com/rockyboyyang/swipefair-frontend">LINK TO BACKEND</a>
 
-### Optional: Deploy local branch to Heroku
-- git push heroku branchname:master
+# Technologies
+- Front-end development
+    - React
+    - CSS
+    - HTML
+    - JavaScript
+  
+ - Back-end development
+    - Python
+    - Flask
+    - SQLALchemy
+    - SQL
+    - PSQL
+    - Postgres
 
 
-### For Changes to DB:
-- heroku run python database.py
+ # Features
+ - Users/Authentication
+ - Splash page/Login/Sign-Up
+ - Jobseeker account creation
+ - Employer account creation
+ - Ability to swipe job openings
 
-### Monitor Logs on Heroku
-- heroku logs --tail
+# Technical Challenges
+- Getting the backend and frontend to connect
+- Utilizing a swipe event
 
-### Access Heroku psql instance
-- heroku pg:psql
-
-### Setup autocomplete for Heroku
-- heroku autocomplete
+# Future Implementations
+- Search bar
+- Company pages to work
+- Web Sockets
+- Testing
+- Channels for specific careers
+- Able to delete chats and messages

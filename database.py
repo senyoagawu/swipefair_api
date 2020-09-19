@@ -18,27 +18,29 @@ with app.app_context():
     db.create_all()
 
     for index in range(5):
-        db.session.add(Jobseeker(name=fake.name(), email=fake.email(), hashed_password=fake.password(), bio=fake.text()))
+        db.session.add(Jobseeker(name=fake.name(), email=fake.email(), hashed_password=generate_password_hash('password'), bio=fake.text()))
         
-    demouser = Jobseeker(name='demouser', email='demo@gmail.com', hashed_password=generate_password_hash('password'), bio='stuff about stuff')
+    demoJobseeker = Jobseeker(name='demoJobseeker', email='demoJobseeker@gmail.com', hashed_password=generate_password_hash('password'), bio='stuff about stuff')
+    demoCompany = Company(company_name='demoCompany', email='demoCompany@gmail.com', hashed_password=generate_password_hash('password'), bio='stuff about stuff')
     
-    db.session.add(demouser)
+    db.session.add(demoJobseeker)
+    db.session.add(demoCompany)
     
     for index in range(5):
-        db.session.add(Company(company_name=fake.company(), email=fake.email(), hashed_password=fake.password(), bio=fake.text()))
+        db.session.add(Company(company_name=fake.company(), email=fake.email(), hashed_password=generate_password_hash('password'), bio=fake.text()))
     
 
 
-    db.session.add(Chat(jobseekers_id=1, companies_id=1))
-    db.session.add(Chat(jobseekers_id=1, companies_id=3))
-    db.session.add(Chat(jobseekers_id=2, companies_id=1))
-    db.session.add(Chat(jobseekers_id=2, companies_id=3))
-    db.session.add(Chat(jobseekers_id=3, companies_id=3))
-    db.session.add(Chat(jobseekers_id=3, companies_id=4))
-    db.session.add(Chat(jobseekers_id=4, companies_id=2))
-    db.session.add(Chat(jobseekers_id=4, companies_id=4))
-    db.session.add(Chat(jobseekers_id=5, companies_id=2))
-    db.session.add(Chat(jobseekers_id=5, companies_id=5))
+    # db.session.add(Chat(jobseekers_id=1, companies_id=1))
+    # db.session.add(Chat(jobseekers_id=1, companies_id=3))
+    # db.session.add(Chat(jobseekers_id=2, companies_id=1))
+    # db.session.add(Chat(jobseekers_id=2, companies_id=3))
+    # db.session.add(Chat(jobseekers_id=3, companies_id=3))
+    # db.session.add(Chat(jobseekers_id=3, companies_id=4))
+    # db.session.add(Chat(jobseekers_id=4, companies_id=2))
+    # db.session.add(Chat(jobseekers_id=4, companies_id=4))
+    # db.session.add(Chat(jobseekers_id=5, companies_id=2))
+    # db.session.add(Chat(jobseekers_id=5, companies_id=5))
 
     jobs = [fake.job(), fake.job(), fake.job(), fake.job(), fake.job()]
     db.session.add(Experience(title=jobs[0], jobseekers_id=1, date_start='now', date_end='now', description=fake.text()))
@@ -60,9 +62,9 @@ with app.app_context():
     companies = Company.query.all()
     jobseekers = Jobseeker.query.all()
     openings = []
-    _ = [openings.extend(c.openings) for c in companies]
-    for opening in openings:
-        for jobseeker in jobseekers:
-            db.session.add(Swipe(jobseekers_id=jobseeker.id, openings_id=opening.id, created_at='now', swiped_right=True, super_swipe=True, role='company'))
+    # _ = [openings.extend(c.openings) for c in companies]
+    # for opening in openings:
+    #     for jobseeker in jobseekers:
+    #         db.session.add(Swipe(jobseekers_id=jobseeker.id, openings_id=opening.id, created_at='now', swiped_right=False, super_swipe=True, role='company'))
 
     db.session.commit()
