@@ -100,6 +100,7 @@ def edit_jobseeker_with_image(jobseekerId):
         jobseeker.education_title = data['education_title']
         jobseeker.education_date_start = data['education_date_start']
         jobseeker.education_date_end = data['education_date_end']
+        # jobseeker.experiences[0].title = data['exp_title']
         db.session.commit()
         return {'jobseeker': jobseeker.as_dict()}
     # return {"message": "something went wrong"}, 500
