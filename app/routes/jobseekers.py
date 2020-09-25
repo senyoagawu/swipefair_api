@@ -82,14 +82,14 @@ def edit_image(email):
 @bp.route('/<int:jobseekerId>', methods=['PUT'])  # edit a jobseeker profile
 def edit_jobseeker_with_image(jobseekerId):
     data = request.form
-    print(data)
+    print(data, 'data')
 
     file = request.files['image']
 
     s3_resource = boto3.resource('s3')
     my_bucket = s3_resource.Bucket(Configuration.S3_BUCKET)
     my_bucket.Object(file.filename).put(Body=file, ACL='public-read')
-
+    
     jobseeker = Jobseeker.query.filter(Jobseeker.id == jobseekerId).one()
     if jobseeker: 
         jobseeker.image = f'https://swipefair.s3.us-east-2.amazonaws.com/{my_bucket.Object(file.filename).key}'

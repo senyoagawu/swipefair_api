@@ -17,7 +17,8 @@ def grabJobseekerMessages(jobseekerId, chatId):
     for opening in openings:
         openingsList.append(opening.as_dict())
     chattingWithInfo['openings'] = openingsList
-    chattingWithInfo.pop('hashed_password')
+    print(chattingWithInfo)
+    # chattingWithInfo.pop('hashed_password')
     data = [{'message': message.as_dict()['body'], 'role': message.as_dict()['role']} for message in messages]
     return {'messages': data, 'chatWithInfo': [chattingWithInfo], 'name': chattingWithInfo['company_name']}
 
@@ -31,7 +32,7 @@ def grabCompanyMessages(companyId, chatId):
     messages = Message.query.filter(chatId == Message.chats_id).all()
     chattingWith = Jobseeker.query.filter(currentChat.jobseekers_id == Jobseeker.id).one()
     chattingWithInfo = chattingWith.as_dict()
-    chattingWithInfo.pop('hashed_password')
+    # chattingWithInfo.pop('hashed_password')
     data = [{'message': message.as_dict()['body'], 'role': message.as_dict()['role']} for message in messages]
     return {'messages': data, 'chatWithInfo': [chattingWithInfo], 'name': chattingWithInfo['name'] }
 
