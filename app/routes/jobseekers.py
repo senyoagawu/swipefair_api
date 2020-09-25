@@ -85,10 +85,14 @@ def edit_jobseeker_with_image(jobseekerId):
     print(data, 'data')
 
     file = request.files['image']
-
+    print('line 88')
     s3_resource = boto3.resource('s3')
+    print('line 90')
     my_bucket = s3_resource.Bucket(Configuration.S3_BUCKET)
+    print('line 92')
     my_bucket.Object(file.filename).put(Body=file, ACL='public-read')
+    print('line 94')
+
     
     jobseeker = Jobseeker.query.filter(Jobseeker.id == jobseekerId).one()
     if jobseeker: 
