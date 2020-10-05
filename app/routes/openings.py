@@ -115,6 +115,7 @@ def delete_item(openingId):
 
 @bp.route('/notswiped/company/<int:companyId>')
 def potential_jobseekers(companyId):
+
     jobseekers = Jobseeker.query.all()
     company = Company.query.filter(Company.id == companyId).one()
     openings = Opening.query.filter(Opening.companies_id == companyId).all()
@@ -132,7 +133,7 @@ def potential_jobseekers(companyId):
     # print(jobseeker)
 
     jobseekers_info = []
-
+    
     for info in jobseeker:
         # print('hi')
         openings = Opening.query.filter(Opening.companies_id == companyId).all()
@@ -148,7 +149,7 @@ def potential_jobseekers(companyId):
             openingsAndJobseekersInfo['title'] = opening.as_dict()['title']
             openingsAndJobseekersInfo['description'] = opening.as_dict()['description']
             jobseekers_info.append(openingsAndJobseekersInfo)
-
+    
     payload = {"jobseekers": jobseekers_info}  # how to merge?
     # print(payload)
     return payload
