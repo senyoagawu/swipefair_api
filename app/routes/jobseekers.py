@@ -54,7 +54,7 @@ def not_already_swiped_openings(jobseekerId):
 @bp.route('/files')
 def files():
     s3_resource = boto3.resource('s3')
-    my_bucket = s3_resource.Bucket(Configuration.S3_BUCKET)
+    my_bucket = s3_resource.Bucket(Configuration.S3_BUCKET_NAME)
     summaries = my_bucket.objects.all()
     for o in summaries: 
         print(o.key)
@@ -67,7 +67,7 @@ def edit_image(email):
     file = request.files['image']
 
     s3_resource = boto3.resource('s3')
-    my_bucket = s3_resource.Bucket(Configuration.S3_BUCKET)
+    my_bucket = s3_resource.Bucket(Configuration.S3_BUCKET_NAME)
     my_bucket.Object(file.filename).put(Body=file, ACL='public-read')
     
 
@@ -84,16 +84,14 @@ def edit_jobseeker_with_image(jobseekerId):
     data = request.form
     print(data, 'data')
 
-    file = request.files['image']
-    print('line 88')
+    file = request.files['image'] 
+    print(file)
     s3_resource = boto3.resource('s3')
     print('line 90')
-    my_bucket = s3_resource.Bucket(Configuration.S3_BUCKET)
-    print('line 92')
+    my_bucket = s3_resource.Bucket(Configuration.S3_BUCKET_NAME)
+    print("line 92")
     my_bucket.Object(file.filename).put(Body=file, ACL='public-read')
-    print('line 94')
-
-    
+    print("line 94")
     jobseeker = Jobseeker.query.filter(Jobseeker.id == jobseekerId).one()
     if jobseeker: 
         jobseeker.image = f'https://swipefair.s3.us-east-2.amazonaws.com/{my_bucket.Object(file.filename).key}'

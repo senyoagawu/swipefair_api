@@ -9,8 +9,8 @@ from app.models import db
 
 s3_resource = boto3.resource(
     "s3", 
-    aws_access_key_id=Configuration.S3_KEY,
-    aws_secret_access_key=Configuration.S3_SECRET_ACCESS_KEY
+    aws_access_key_id=Configuration.AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=Configuration.AWS_SECRET_ACCESS_KEY
 )
 
 app = Flask(__name__)
