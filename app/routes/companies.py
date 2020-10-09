@@ -15,6 +15,7 @@ def company_id(companyId):
     company = Company.query.filter(Company.id == companyId).one()
     return {'company': company.as_dict()}
 
+
 @bp.route('/<int:companyId>/notswipes/jobseekers')  #fetch  all jobseekers who have not swiped right on your openings that you haven't swiped on
 def potential_jobseekers(companyId):
     jobseekers = Company.potential_jobseekers(companyId)
